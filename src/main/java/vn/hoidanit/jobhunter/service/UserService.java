@@ -9,14 +9,18 @@ import vn.hoidanit.jobhunter.repository.UserRepositoty;
 
 public class UserService {
 
-    private final UserRepositoty UserRepository;
+    private final UserRepositoty userRepository;
 
     public UserService(UserRepositoty userRepository){
-        this.UserRepository = userRepository;
+        this.userRepository = userRepository;
     }
 
     public User handleCreateUser(User user){
-       return this.UserRepository.save(user);
+       return this.userRepository.save(user);
+    }
+
+    public void handleDeleteUser(long id){
+        this.userRepository.deleteById(id);
     }
 
 }
