@@ -15,11 +15,11 @@ public class GlobalException {
       // ResponseEntity là genaric nên phải có <string>
       @ExceptionHandler(value = IdInvalidException.class)
       public ResponseEntity<RestResponse<Object>> handleIdException(IdInvalidException idException) {
-         RestResponse<Object> res = new RestResponse<Object>();
-         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-         res.setError(idException.getMessage());
-         res.setMessage("IdInvalidException");
+            RestResponse<Object> res = new RestResponse<Object>();
+            res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            res.setError(idException.getMessage());
+            res.setMessage("IdInvalidException");
 
-        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
       }
 }

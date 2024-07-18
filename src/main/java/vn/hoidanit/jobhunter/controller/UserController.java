@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,21 +24,26 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // @GetMapping("/users/create")
     @PostMapping("/users")
-    public ResponseEntity<User> createNewUser(
-            @RequestBody User postManUser) {
+    public ResponseEntity<User> createNewUser(@RequestBody User postManUser) {
+        String hasdPassword = this.passwordEncoder.encode(postManUser.getPassword()); // thuật toán để chuyển password
+                                                                                      // sang mã hoá
+        postManUser.setPassword(hasdPassword); // ghi để mật khẩu để lưu vào database
         User abcUser = this.userService.handleCreateUser(postManUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(abcUser);
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
-        if(id >= 1500){
+        if (id >= 1500) {
             throw new IdInvalidException("id khong lon hon 1500");
         }
         this.userService.handleDeleteUser(id);
@@ -46,7 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") long id)  {
+    public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
         User fetchUser = this.userService.fetchUserById(id);
         // return ResponseEntity.ok(fetchUser);
         return ResponseEntity.status(HttpStatus.OK).body(fetchUser);
