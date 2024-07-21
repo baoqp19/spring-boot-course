@@ -22,22 +22,22 @@ public class GlobalException {
 
       // ResponseEntity là genaric nên phải có <string>
       @ExceptionHandler(value = {
-            IdInvalidException.class,
-            UsernameNotFoundException.class,
-            BadCredentialsException.class
+                  // IdInvalidException.class,
+                  UsernameNotFoundException.class,
+                  BadCredentialsException.class
       })
 
-      public ResponseEntity<RestResponse<Object>> handleIdException(IdInvalidException idException) {
+      public ResponseEntity<RestResponse<Object>> handleIdException(Exception ex) {
             RestResponse<Object> res = new RestResponse<Object>();
             res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            res.setError(idException.getMessage());
+            res.setError(ex.getMessage());
             res.setMessage("Exception occurs...");
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
       }
+
       @ExceptionHandler(MethodArgumentNotValidException.class)
-      public ResponseEntity<RestResponse<Object>>
-      validationErError(MethodArgumentNotValidException ex){
+      public ResponseEntity<RestResponse<Object>> validationErError(MethodArgumentNotValidException ex) {
             BindingResult result = ex.getBindingResult();
             final List<FieldError> fielErrors = result.getFieldErrors();
 
