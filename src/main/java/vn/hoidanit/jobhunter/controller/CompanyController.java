@@ -1,7 +1,10 @@
 package vn.hoidanit.jobhunter.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.Company;
+import vn.hoidanit.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.service.CompanyService;
 
 // biến nó thành API
@@ -24,6 +29,7 @@ public class CompanyController {
     public CompanyController(CompanyService companyService) {
         this.companyService = companyService;
     }
+
     // valid nó quét trong module
     // RequestBody để lấy data company
     // truyền bearer token
@@ -33,20 +39,27 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.companyService.handleCreateCompany(reqCompany));
     }
 
-    @GetMapping("/companies")
-    public ResponseEntity<List<Company>> getCompany(){
-        List<Company> companies = this.companyService.handleGetCompany();
-        return ResponseEntity.ok(companies);
+    public ResponseEntity<ResultPaginationDTO> getCompany(
+            @RequestParam("current") Optional<String> currentOptional,
+            @RequestParam("pageSize") Optional<String> pageSizeOptional) {
+        String sCurrent = currentOptional.isPresent() ? currentOptional.get() : "";
+        String sPageSize = pageSizeOptional.isPresent() ? pageSizeOptional.get() : "";
+
+        int current = Integer.parseInt(sCurrent);
+        int pageSize = Integer.parseInt(sPageSize);
+
+        Pageable pageable = PageRequest.of(current - 1, pageSize);
+        return ResponseEntity.ok(this.companyService.handleGetCompany(pageable));
     }
 
     @PutMapping("/companies")
-    public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company repCompany){
+    public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company repCompany) {
         Company updateCompany = this.companyService.handleUpdateCompany(repCompany);
         return ResponseEntity.ok(updateCompany);
     }
 
     @DeleteMapping("/companies/{id}")
-    public ResponseEntity<Void> deleteCompany(@PathVariable("id") long id){
+    public ResponseEntity<Void> deleteCompany(@PathVariable("id") long id) {
         this.companyService.handleDeleteCompany(id);
         return ResponseEntity.ok(null);
     }
