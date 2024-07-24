@@ -1,5 +1,8 @@
 package vn.hoidanit.jobhunter.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,6 +28,9 @@ public class AuthController {
     private final SecurityUtil securityUtil;
     private final UserService userService;
 
+    @Value("${hoidanit.jwt.refresh-token-validity-in-seconds}")
+    private long refreshTokenExpiration;
+
     public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil,
             UserService userService) {
         this.securityUtil = securityUtil;
@@ -43,23 +49,38 @@ public class AuthController {
 
         // create a token
 
-        String access_token = this.securityUtil.createToken(authentication);
+        String access_token = this.securityUtil.createAccessToken(authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        
+
         ResLoginDTO res = new ResLoginDTO();
         User currentUserDB = this.userService.handleGetUserByUsername(loginDTO.getUsername());
         if (currentUserDB != null) {
             ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
-            currentUserDB.getId(),
-            currentUserDB.getEmail(), 
-            currentUserDB.getName());
-        res.setUser(userLogin);
+                    currentUserDB.getId(),
+                    currentUserDB.getEmail(),
+                    currentUserDB.getName());
+            res.setUser(userLogin);
         }
 
-
-
         res.setAccessToken(access_token);
-        return ResponseEntity.ok().body(res);
+        // create refresh token
+        String refresh_token = this.securityUtil.createRefreshToken(loginDTO.getUsername(), res);
+
+        // update user
+        this.userService.updateUserToken(refresh_token, loginDTO.getUsername());
+
+        // set cookies
+        ResponseCookie resCookies = ResponseCookie
+                .from("refresh_token", refresh_token)
+                .httpOnly(true) // chỉ cho server của to sử dụng
+                .secure(true) // có nghĩa là cookies chỉ được sử dụng với https (http kh)
+                .path("/") // tất cả các api đều trả về cookie
+                .maxAge(refreshTokenExpiration) // thời gian hết hạn từ khi chạy
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, resCookies.toString())
+                .body(res);
 
     }
 }
