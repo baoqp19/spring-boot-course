@@ -57,7 +57,6 @@ public class AuthController {
                 // set thông tin người dùng đăng nhập vào context (có thể sử dụng sau này)
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
                 ResLoginDTO res = new ResLoginDTO();
                 User currentUserDB = this.userService.handleGetUserByUsername(loginDTO.getUsername());
                 if (currentUserDB != null) {
@@ -68,7 +67,7 @@ public class AuthController {
                         res.setUser(userLogin);
                 }
 
-                String access_token = this.securityUtil.createAccessToken(authentication, res.getUser());
+                String access_token = this.securityUtil.createAccessToken(authentication.getName(), res.getUser());
                 res.setAccessToken(access_token);
 
                 // create refresh token
@@ -112,13 +111,54 @@ public class AuthController {
 
         @GetMapping("/auth/refresh")
         @ApiMessage("Get User by refresh token")
-        public ResponseEntity<String> getRefreshToken(
-                        @CookieValue(name = "refresh_token") String refresh_token)
+        public ResponseEntity<ResLoginDTO> getRefreshToken(
+                // nếu không truyền lên refresh_token thì mặc định là abc
+                        @CookieValue(name = "refresh_token", defaultValue = "abc") String refresh_token)
                         throws IdInvalidException {
+                if (refresh_token.equals("abc")) {
+                        throw new IdInvalidException("Bạn không có refresh token ở cookie");
+                }
+                // check valid
                 Jwt decodedToken = this.securityUtil.checkValidRefreshToken(refresh_token);
                 String email = decodedToken.getSubject();
 
-                return ResponseEntity.ok().body(email);
+                // check user by token + email
+                User currentUser = this.userService.getUserByRefreshTokenAndEmail(refresh_token, email);
+                if (currentUser == null) {
+                        throw new IdInvalidException("Refresh Token không hợp lệ");
+                }
+
+                ResLoginDTO res = new ResLoginDTO();
+                User currentUserDB = this.userService.handleGetUserByUsername(email);
+                if (currentUserDB != null) {
+                        ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
+                                        currentUserDB.getId(),
+                                        currentUserDB.getEmail(),
+                                        currentUserDB.getName());
+                        res.setUser(userLogin);
+                }
+
+                String access_token = this.securityUtil.createAccessToken(email, res.getUser());
+                res.setAccessToken(access_token);
+
+                // create refresh token
+                String new_refresh_token = this.securityUtil.createRefreshToken(email, res);
+
+                // update user
+                this.userService.updateUserToken(new_refresh_token, email);
+
+                // set cookies
+                ResponseCookie resCookies = ResponseCookie
+                                .from("refresh_token", new_refresh_token)
+                                .httpOnly(true) // chỉ cho server của to sử dụng
+                                .secure(true) // có nghĩa là cookies chỉ được sử dụng với https (http kh)
+                                .path("/") // tất cả các api đều trả về cookie
+                                .maxAge(refreshTokenExpiration) // thời gian hết hạn từ khi chạy
+                                .build();
+
+                return ResponseEntity.ok()
+                                .header(HttpHeaders.SET_COOKIE, resCookies.toString())
+                                .body(res);
         }
 
 }
