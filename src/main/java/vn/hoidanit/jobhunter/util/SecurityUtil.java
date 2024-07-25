@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 
 import com.nimbusds.jose.util.Base64;
@@ -90,6 +91,25 @@ public class SecurityUtil {
         }
         return null;
     }
+
+
+      private SecretKey getSecretKey() {
+        byte[] keyBytes = Base64.from(jwtKey).decode();
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length,
+                JW_ALGORITHM.getName());
+    }
+
+    public Jwt checkValidRefreshToken(String token){
+     NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(
+                getSecretKey()).macAlgorithm(SecurityUtil.JW_ALGORITHM).build();
+                try {
+                     return jwtDecoder.decode(token);
+                } catch (Exception e) {
+                    System.out.println(">>> Refresh Token error: " + e.getMessage());
+                    throw e;
+                }
+    }
+    
 
     /**
      * Get the JWT of the current user.
