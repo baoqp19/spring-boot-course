@@ -9,6 +9,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -39,17 +41,21 @@ public class User {
     private GenderEnum gender;
 
     private String address;
-    
+
     private int age;
     @Column(columnDefinition = "MEDIUMTEXT")
-    
+
     private String refreshToken;
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
 
-        @PrePersist
+    @ManyToOne()
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    @PrePersist
     public void handleBeforeCreate() {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
@@ -66,6 +72,5 @@ public class User {
 
         this.updatedAt = Instant.now();
     }
-
 
 }
