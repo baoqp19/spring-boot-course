@@ -93,26 +93,29 @@ public class AuthController {
 
         @GetMapping("/auth/account")
         @ApiMessage("fetch account")
-        public ResponseEntity<ResLoginDTO.UserLogin> getAccount() {
+        public ResponseEntity<ResLoginDTO.UserGetAccount> getAccount() {
                 String email = SecurityUtil.getCurrentUserLogin().isPresent()
                                 ? SecurityUtil.getCurrentUserLogin().get()
                                 : "";
 
                 User currentUserDB = this.userService.handleGetUserByUsername(email);
+                ResLoginDTO.UserGetAccount userGetAccount = new ResLoginDTO.UserGetAccount();
+
                 ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin();
                 if (currentUserDB != null) {
                         userLogin.setId(currentUserDB.getId());
                         userLogin.setEmail(currentUserDB.getEmail());
                         userLogin.setName(currentUserDB.getName());
+                        userGetAccount.setUser(userLogin);
                 }
 
-                return ResponseEntity.ok().body(userLogin);
+                return ResponseEntity.ok().body(userGetAccount);
         }
 
         @GetMapping("/auth/refresh")
         @ApiMessage("Get User by refresh token")
         public ResponseEntity<ResLoginDTO> getRefreshToken(
-                // nếu không truyền lên refresh_token thì mặc định là abc
+                        // nếu không truyền lên refresh_token thì mặc định là abc
                         @CookieValue(name = "refresh_token", defaultValue = "abc") String refresh_token)
                         throws IdInvalidException {
                 if (refresh_token.equals("abc")) {
@@ -164,28 +167,28 @@ public class AuthController {
         @PostMapping("/auth/logout")
         @ApiMessage("Logout User")
         public ResponseEntity<Void> logout() throws IdInvalidException {
-            String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
-    
-            if (email.equals("")) {
-                throw new IdInvalidException("Access Token không hợp lệ");
-            }
-    
-            // update refresh token = null
-            this.userService.updateUserToken(null, email);
-    
-            // remove refresh token cookie
-            ResponseCookie deleteSpringCookie = ResponseCookie
-                    .from("refresh_token", null)
-                    .httpOnly(true)
-                    .secure(true)
-                    .path("/")
-                    .maxAge(0)
-                    .build();
-    
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString())
-                    .body(null);
+                String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get()
+                                : "";
+
+                if (email.equals("")) {
+                        throw new IdInvalidException("Access Token không hợp lệ");
+                }
+
+                // update refresh token = null
+                this.userService.updateUserToken(null, email);
+
+                // remove refresh token cookie
+                ResponseCookie deleteSpringCookie = ResponseCookie
+                                .from("refresh_token", null)
+                                .httpOnly(true)
+                                .secure(true)
+                                .path("/")
+                                .maxAge(0)
+                                .build();
+
+                return ResponseEntity.ok()
+                                .header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString())
+                                .body(null);
         }
-    
 
 }
