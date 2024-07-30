@@ -44,14 +44,14 @@ public class User {
 
     private int age;
     @Column(columnDefinition = "MEDIUMTEXT")
-
     private String refreshToken;
+
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
 
