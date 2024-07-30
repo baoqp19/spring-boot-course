@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.Job;
 import vn.hoidanit.jobhunter.domain.Skill;
-import vn.hoidanit.jobhunter.domain.respone.ResCreateJobDTO;
-import vn.hoidanit.jobhunter.domain.respone.ResUpdateJobDTO;
 import vn.hoidanit.jobhunter.domain.respone.ResultPaginationDTO;
+import vn.hoidanit.jobhunter.domain.respone.job.ResCreateJobDTO;
+import vn.hoidanit.jobhunter.domain.respone.job.ResUpdateJobDTO;
 import vn.hoidanit.jobhunter.repository.JobRepository;
 import vn.hoidanit.jobhunter.repository.SkillRepository;
 
