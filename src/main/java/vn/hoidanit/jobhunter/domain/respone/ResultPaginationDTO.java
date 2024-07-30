@@ -11,7 +11,6 @@ public class ResultPaginationDTO {
 
     @Getter
     @Setter
-
     public static class Meta {
         private int page;
         private int pageSize;
