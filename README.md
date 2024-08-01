@@ -14,6 +14,8 @@ Fanpage “Hỏi Dân IT” : https://www.facebook.com/askITwithERIC/
 
 Udemy Hỏi Dân IT: https://www.udemy.com/user/eric-7039/
 
+facebook tôi: https://www.facebook.com/pqbao.05
+
 
 di chuyển class ctrl + nhân các file để copy rồi di chuyển vào thư mục cần đưa vào 
 
