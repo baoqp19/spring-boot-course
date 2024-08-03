@@ -10,21 +10,26 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
+import vn.hoidanit.jobhunter.domain.Job;
+import vn.hoidanit.jobhunter.repository.JobRepository;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Service
 public class EmailService {
       private final MailSender mailSender;
       private final JavaMailSender javaMailSender;
       private final SpringTemplateEngine templateEngine;
-
+      private final JobRepository jobRepository;
     public EmailService(MailSender mailSender,
                         JavaMailSender javaMailSender,
+                        JobRepository jobRepository,
                         SpringTemplateEngine templateEngine) {
         this.mailSender = mailSender;
         this.javaMailSender = javaMailSender;
         this.templateEngine = templateEngine;
+        this.jobRepository = jobRepository;
     }
 
         public void sendSimpleEmail() {
@@ -51,6 +56,11 @@ public class EmailService {
 
     public void sendEmailFromTemplateSync(String to, String subject, String templateName) {
         Context context = new Context();
+        List<Job> arrJob = this.jobRepository.findAll();
+        String name = "Bao";
+        context.setVariable("name", name);
+        context.setVariable("jobs", arrJob);
+
         String content = templateEngine.process(templateName, context);
         this.sendEmailSync(to, subject, content, false, true);
     }
