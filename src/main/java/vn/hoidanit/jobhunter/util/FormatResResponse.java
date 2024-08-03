@@ -38,7 +38,14 @@ public class FormatResResponse implements ResponseBodyAdvice<Object> {
         if (body instanceof String || body instanceof Resource) {
             return body;
         }
-        // case error
+
+        // case error https://localhost8080/v3/api-docs chạy sẽ không bị lỗi và hiển thị đầy đủ thông tin backend
+        String path = request.getURI().getPath();
+        if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui")) {
+            return body;
+        }
+
+
         if (status >= 400) {
             res.setError("CALL API FAILED");
             res.setMessage(body);
