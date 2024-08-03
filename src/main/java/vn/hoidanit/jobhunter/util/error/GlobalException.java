@@ -21,6 +21,18 @@ import vn.hoidanit.jobhunter.domain.respone.RestResponse;
 @RestControllerAdvice
 public class GlobalException {
 
+    // xử lý sự kiện mà chưa có Exception ví dụ như gửi email, nếu truyền lên sai thì nó sẽ chạy vào Excepsion này
+
+    // handle all exception
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<RestResponse<Object>> handleAllException(Exception ex) {
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        res.setMessage(ex.getMessage());
+        res.setError("Internal Server Error");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+    }
+
       // ResponseEntity là genaric nên phải có <string>
       @ExceptionHandler(value = {
                   UsernameNotFoundException.class,
@@ -91,6 +103,9 @@ public class GlobalException {
 
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
     }
+
+
+
 
 
 }
