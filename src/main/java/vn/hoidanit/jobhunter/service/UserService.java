@@ -52,14 +52,6 @@ public class UserService {
         this.userRepository.deleteById(id);
     }
 
-    public User fetchUserById(long id) {
-        // optional là có hay không
-        Optional<User> userOptional = this.userRepository.findById(id);
-        if (userOptional.isPresent()) { // isPresent() có hay không
-            return userOptional.get();
-        }
-        return null;
-    }
 
     public ResultPaginationDTO fetchAllUser(Specification<User> spec, Pageable pageable) {
         Page<User> pageUser = this.userRepository.findAll(spec, pageable);
@@ -81,6 +73,14 @@ public class UserService {
         rs.setResult(listUser);
 
         return rs;
+    }
+
+    public User fetchUserById(long id) {
+        Optional<User> userOptional = this.userRepository.findById(id);
+        if (userOptional.isPresent()) { // isPresent() có hay không
+            return userOptional.get();
+        }
+        return null;
     }
 
     public User handleUpdateUser(User reqUser) {
