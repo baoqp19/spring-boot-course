@@ -23,8 +23,8 @@ public class GlobalException {
 
     // xử lý sự kiện mà chưa có Exception ví dụ như gửi email, nếu truyền lên sai thì nó sẽ chạy vào Excepsion này
 
-    // handle all exception
-    @ExceptionHandler(Exception.class)
+    // các lỗi nào chưa được định nghĩa thì nó chạy vào trong này để in ra lỗi
+    @ExceptionHandler(Exception.class)     
     public ResponseEntity<RestResponse<Object>> handleAllException(Exception ex) {
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -33,13 +33,12 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
     }
 
-      // ResponseEntity là genaric nên phải có <string>
+      
       @ExceptionHandler(value = {
                   UsernameNotFoundException.class,
                   BadCredentialsException.class,
                   IdInvalidException.class,
       })
-
       public ResponseEntity<RestResponse<Object>> handleIdException(Exception ex) {
             RestResponse<Object> res = new RestResponse<Object>();
             res.setStatusCode(HttpStatus.BAD_REQUEST.value());
@@ -49,6 +48,7 @@ public class GlobalException {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
       }
+
 
       @ExceptionHandler(value = {
                   NoResourceFoundException.class,

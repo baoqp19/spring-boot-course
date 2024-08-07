@@ -3,11 +3,9 @@ package vn.hoidanit.jobhunter.controller;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +43,7 @@ public class UserController {
     @PostMapping("/users")
     @ApiMessage("Create a new user")
     public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User postManUser)
-            throws IdInvalidException {
+            throws IdInvalidException { 
         boolean isEmailExits = this.userService.isEmailExist(postManUser.getEmail());
         if (isEmailExits) {
             throw new IdInvalidException(

@@ -27,5 +27,14 @@ dài tùy thích :v
 
 -- ResponseEntity: gồm state, header, body
 
-  return ResponseEntity.status(HttpStatus.CREATED) mã phản hồi 201 khi tạo mới
-  return ResponseEntity.status(HttpStatus.OK) mã phản hồi 200 khi các thao tác khác
+   --return ResponseEntity.status(HttpStatus.CREATED) mã phản hồi 201 khi tạo mới
+   --return ResponseEntity.status(HttpStatus.OK) mã phản hồi 200 khi các thao tác khác
+
+annotation: resControoler: trong Class Controller xây dựng các dịch vụ RestFul API, xử lý các yêu cầu HTTP
+
+-- khi có throws trong class Controller thì nó nhảy sang GlobalException coi nó ứng với tên Throws nào để hiển thị ra thông báo
+
+ #@RestControllerAdvice = @ControllerAdvice + @ResponseBody
+
+  + @ControllerAdvice: là annotation để khai báo một lớp xử lý ngoại lệ toàn cục cho các Controller, định nghĩa phương thức xử lý ngoại lệ trong bất kỳ controller nào mà không cần khai báo lại cho từng Controller
+  + @ResponseBody: là annotation chỉ rằng giá rị trả về trả về cho client là đinh dạng JSON hoặc XML 
