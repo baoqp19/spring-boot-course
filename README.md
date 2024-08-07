@@ -24,3 +24,8 @@ thể (vì code rất ít). Vì vậy, phù hợp để giải quyết tác vụ
 -- @RestController : code dài hơn. 100% kiểm soát code của bạn. Bạn thích viết ngắn viết
 dài tùy thích :v
      ================ XONG CHƯƠNG 4  ===============
+
+-- ResponseEntity: gồm state, header, body
+
+  return ResponseEntity.status(HttpStatus.CREATED) mã phản hồi 201 khi tạo mới
+  return ResponseEntity.status(HttpStatus.OK) mã phản hồi 200 khi các thao tác khác
