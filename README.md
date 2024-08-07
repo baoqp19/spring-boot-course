@@ -13,7 +13,7 @@ build.gradle.kts
 
 -- 2. RequestBody là không cần nhập thông tin ở IDE mà nhập ở phần raw kiểu JSON thì nó sẽ ánh xạ và tạo mới nhờ có jackson mà nó có thể từ JSON sang kiểu Object và ngược lại, 
 
--- 3. put/patch
+# -- 3. put/patch
   - put là nó ghi đè cả đối tượng
   - patch là nó ghi đè riếng lẻ các thuộc tính
   => nhưng trong dự án thích dùng put hơn thì nó ngắn :v
@@ -25,7 +25,7 @@ thể (vì code rất ít). Vì vậy, phù hợp để giải quyết tác vụ
 dài tùy thích :v
      ================ XONG CHƯƠNG 4  ===============
 
--- ResponseEntity: gồm state, header, body
+# -- ResponseEntity: gồm state, header, body
 
    --return ResponseEntity.status(HttpStatus.CREATED) mã phản hồi 201 khi tạo mới
    --return ResponseEntity.status(HttpStatus.OK) mã phản hồi 200 khi các thao tác khác
@@ -34,7 +34,22 @@ annotation: resControoler: trong Class Controller xây dựng các dịch vụ R
 
 -- khi có throws trong class Controller thì nó nhảy sang GlobalException coi nó ứng với tên Throws nào để hiển thị ra thông báo
 
- #@RestControllerAdvice = @ControllerAdvice + @ResponseBody
+ # @RestControllerAdvice = @ControllerAdvice + @ResponseBody
 
   + @ControllerAdvice: là annotation để khai báo một lớp xử lý ngoại lệ toàn cục cho các Controller, định nghĩa phương thức xử lý ngoại lệ trong bất kỳ controller nào mà không cần khai báo lại cho từng Controller
   + @ResponseBody: là annotation chỉ rằng giá rị trả về trả về cho client là đinh dạng JSON hoặc XML 
+
+# Format phản hồi
+  + implements ResponBodyAdvice can thiệt vào quá trình phản hồi trả vể cho client
+    1. supports return true là bất kì phản hồi nào cũng ghi đè
+    2. Global chạy trước rồi FormatResPonse mới chạy
+
+# ====================== CHƯƠNG 7 ======================
+           -Mô hình stateful and Stateless
+1. Stateful = state application + full : chứa đầy state của application
+Lưu trữ thông tin bên trong ứng dụng, ví dụ như thông tin người dùng đăng nhập
+2. Session : phiên đăng nhập. Được dùng trong mô hình Stateful, cách mà ứng dụng lưu
+trữ data giữa các lợi gọi request
+3. Stateless = state application + less : không chứa state của application  
+Không lưu trữ thông tin trong ứng dụng (nothing at all) 
+ ==>> đang dùng stateLess  vì nó làm phe hơn

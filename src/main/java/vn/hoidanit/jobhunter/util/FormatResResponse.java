@@ -14,12 +14,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import vn.hoidanit.jobhunter.domain.respone.RestResponse;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 
-@ControllerAdvice
+@ControllerAdvice 
 public class FormatResResponse implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
-        return true;
+        return true;   
     }
 
     @Override
@@ -47,8 +47,7 @@ public class FormatResResponse implements ResponseBodyAdvice<Object> {
 
 
         if (status >= 400) {
-            res.setError("CALL API FAILED");
-            res.setMessage(body);
+           return body;
         } else {
             // case success
             ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
