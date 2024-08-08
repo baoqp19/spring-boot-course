@@ -31,7 +31,8 @@ import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 @RequestMapping("/api/v1")
 public class AuthController {
 
-        private final AuthenticationManagerBuilder authenticationManagerBuilder;
+        
+        private final AuthenticationManagerBuilder authenticationManagerBuilder; // cài này spring có không phải class
         private final SecurityUtil securityUtil;
         private final UserService userService;
         private final PasswordEncoder passwordEncoder;
@@ -53,11 +54,12 @@ public class AuthController {
 
         @PostMapping("/auth/login")
         public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody ReqLoginDTO loginDTO) {
-
+                // để khi truyền username và password trên raw json thì nó biết đứa nào đang đăng nhập
                 // nạp input gồm username/password vào Security
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                                 loginDTO.getUsername(), loginDTO.getPassword());
-                // xác thực người dùng => cần viết hàm loadUserByUsername
+
+                // xác thực người dùng => cần viết hàm loadUserByUsername = UserDetailsCustom.java
                 Authentication authentication = authenticationManagerBuilder.getObject()
                                 .authenticate(authenticationToken);
 

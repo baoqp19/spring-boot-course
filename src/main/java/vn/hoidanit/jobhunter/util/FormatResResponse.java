@@ -35,6 +35,8 @@ public class FormatResResponse implements ResponseBodyAdvice<Object> {
 
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(status);
+
+        // nếu body là string hoặc đối tượng Resource thì in ra body
         if (body instanceof String || body instanceof Resource) {
             return body;
         }
@@ -44,10 +46,11 @@ public class FormatResResponse implements ResponseBodyAdvice<Object> {
         if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui")) {
             return body;
         }
-
+        
+        // body là dữ liệu trả về từ controller API
 
         if (status >= 400) {
-           return body;
+           return body;        
         } else {
             // case success
             ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);

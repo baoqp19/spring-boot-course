@@ -60,7 +60,7 @@ public class SecurityConfiguration {
         };
 
         http
-                .csrf(c -> c.disable())
+                .csrf(c -> c.disable())   // vì cần truyên lên token mới co request trên api
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         authz -> authz
@@ -71,20 +71,49 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.GET, "/api/v1/skills/**").permitAll()
 
 
-                                .anyRequest().authenticated())
-
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
-                        .authenticationEntryPoint(customAuthenticationEntryPoint))
+                                // .anyRequest().permitAll())  // cho phép gọi các yêu cầu mà không cần đăng nhập
+                                .anyRequest().authenticated()) 
+                
+                             // thêm cái này vào để các request API đểu có token hợp lệ mới send dc 
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())   
+                .authenticationEntryPoint(customAuthenticationEntryPoint))   // Sử dụng custom entry point cho xử lý lỗi xác thực
 
                 // .exceptionHandling(
                 // exceptions -> exceptions
                 // .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
                 // .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
 
-                .formLogin(f -> f.disable())
+                .formLogin(f -> f.disable()) // Vô hiệu hóa form login mặc định của Spring Security
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
+    }
+
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthorityPrefix("");
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("permission");
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
+    }
+
+
+    // mã hoá nó
+    @Bean
+    public JwtEncoder jwtEncoder() {
+        return new NimbusJwtEncoder(new ImmutableSecret<>(getSecretKey()));
+    }
+
+
+    // chuyển key base64 sang Secretkey (khoá bí mật)
+    private SecretKey getSecretKey() {
+        byte[] keyBytes = Base64.from(jwtKey).decode();
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length,
+                SecurityUtil.JW_ALGORITHM.getName());
     }
 
     @Bean
@@ -99,28 +128,6 @@ public class SecurityConfiguration {
                 throw e;
             }
         };
-    }
-
-    @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthorityPrefix("");
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("permission");
-
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-        return jwtAuthenticationConverter;
-    }
-
-    @Bean
-    public JwtEncoder jwtEncoder() {
-        return new NimbusJwtEncoder(new ImmutableSecret<>(getSecretKey()));
-    }
-
-    private SecretKey getSecretKey() {
-        byte[] keyBytes = Base64.from(jwtKey).decode();
-        return new SecretKeySpec(keyBytes, 0, keyBytes.length,
-                SecurityUtil.JW_ALGORITHM.getName());
     }
 
 }

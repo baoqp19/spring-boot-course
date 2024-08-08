@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
 import vn.hoidanit.jobhunter.service.UserService;
 
 
-
-
-@Component("userDetailsService")
+@Component("userDetailsService")  // quy tắt đặt tên been viết thường chữ cái đầu
 public class UserDetailsCustom implements UserDetailsService {
 
     private final UserService userService;

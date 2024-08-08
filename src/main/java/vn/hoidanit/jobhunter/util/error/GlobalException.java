@@ -36,7 +36,7 @@ public class GlobalException {
       
       @ExceptionHandler(value = {
                   UsernameNotFoundException.class,
-                  BadCredentialsException.class,
+                  BadCredentialsException.class,   // thông tin đăng nhập không hợp lệ
                   IdInvalidException.class,
       })
       public ResponseEntity<RestResponse<Object>> handleIdException(Exception ex) {
@@ -49,6 +49,7 @@ public class GlobalException {
       }
 
 
+      // khi đường dẫn bị lỗi 404
       @ExceptionHandler(value = {
                   NoResourceFoundException.class,
       })
@@ -62,7 +63,10 @@ public class GlobalException {
       }
 
 
-      @ExceptionHandler(MethodArgumentNotValidException.class)
+      // nó chạy vào khi username và password để trống notBlank và valid
+      @ExceptionHandler(
+            MethodArgumentNotValidException.class
+      )
       public ResponseEntity<RestResponse<Object>> validationErError(MethodArgumentNotValidException ex) {
             BindingResult result = ex.getBindingResult();
             final List<FieldError> fielErrors = result.getFieldErrors();
@@ -71,13 +75,14 @@ public class GlobalException {
             res.setStatusCode(HttpStatus.BAD_REQUEST.value());
             res.setError(ex.getBody().getDetail());
 
+            // stream là API thao tác tập dữ liệu collect tập hợp là chuyển sang về dạng khác
             List<String> errors = fielErrors.stream().map(f -> f.getDefaultMessage()).collect(Collectors.toList());
             res.setMessage(errors.size() > 1 ? errors : errors.get(0));
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
       }
       
-
+      
       @ExceptionHandler(value = {
                   StorageException.class,
       })

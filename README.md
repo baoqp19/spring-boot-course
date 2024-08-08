@@ -1,7 +1,7 @@
-# Thông tin liên hệ với tôi
-
-facebook tôi: https://www.facebook.com/pqbao.05
-
+# QUAN TRỌNG 
+# CƠ CHẾ HOẠT ĐỌNG CỦA SPRING SECURITY
+ -- KHI CHẠY ỨNG DỤNG JAVA KHI CÀI SECURITY THÌ NÓ BẮT PHẢI ĐĂNG NHẬP NÊN KHI MỚI VÀO THÌ
+ TRÊN HÀM MAIN CÓ EXCULE ĐI VÀI CÁI ĐỂ CHẠY MÀ KHÔNG HIỂN THỊ PHẦN SECURITY
 
 di chuyển class ctrl + nhân các file để copy rồi di chuyển vào thư mục cần đưa vào 
 
@@ -25,7 +25,7 @@ thể (vì code rất ít). Vì vậy, phù hợp để giải quyết tác vụ
 dài tùy thích :v
      ================ XONG CHƯƠNG 4  ===============
 
-# -- ResponseEntity: gồm state, header, body
+# -- ResponseEntity: gồm state, header, body  
 
    --return ResponseEntity.status(HttpStatus.CREATED) mã phản hồi 201 khi tạo mới
    --return ResponseEntity.status(HttpStatus.OK) mã phản hồi 200 khi các thao tác khác
@@ -53,3 +53,15 @@ trữ data giữa các lợi gọi request
 3. Stateless = state application + less : không chứa state của application  
 Không lưu trữ thông tin trong ứng dụng (nothing at all) 
  ==>> đang dùng stateLess  vì nó làm phe hơn
+
+ # OUTH 2 THÌ CẦN CÀI ĐẶT THƯ VIỆN 
+-- thêm phần LoginDTO có userName, password
+-- Mã hoá mật khẩu bài cơ chế security
+-- Nhập username vs password để hiện thị thông tin trong bài loadUserByUsernaem
+-- tạo key để xác thực bearer_token và 
+# CORS 
+ khi 2 đường dẫn (API) khác nhau thì nó có lỗi CORS nếu không thì
+ nếu thằng nào gọi API fb getNumberPhone thì sẽ lộ thông tin cá nhân
+
+
+

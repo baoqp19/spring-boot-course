@@ -53,9 +53,9 @@ public class PermissionInterceptor implements HandlerInterceptor {
                             && item.getMethod().equals(httpMethod));
 
 
-//                    if (!isAllow) {
-//                        throw new PermissionException("Bạn không có quyền truy cập endpoint này.");
-//                }
+                   if (!isAllow) {
+                       throw new PermissionException("Bạn không có quyền truy cập endpoint này.");
+               }
             } else {
                 throw new PermissionException("Bạn không có quyền truy cập endpoint này.");
             }
