@@ -3,6 +3,7 @@ package vn.hoidanit.jobhunter.domain;
 import java.time.Instant;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -39,9 +40,11 @@ public class Company {
     private String address;
 
     private String logo;
-
-    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
+     
+    // format thời gian 
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
+    
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;

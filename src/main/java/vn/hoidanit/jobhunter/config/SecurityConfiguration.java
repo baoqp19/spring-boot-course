@@ -61,7 +61,7 @@ public class SecurityConfiguration {
 
         http
                 .csrf(c -> c.disable())   // vì cần truyên lên token mới co request trên api
-                .cors(Customizer.withDefaults())
+                .cors(Customizer.withDefaults())  // cấu hình mặc đinh cors, và thêm filter bên CorsConfig để chèn filter vào
                 .authorizeHttpRequests(
                         authz -> authz
                                 // đường link có đuôi như dưới thì không cần đăng nhập
@@ -90,6 +90,7 @@ public class SecurityConfiguration {
     }
 
 
+    // trả về danh sách thông tin người dùng và danh sách quyền hạn 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -98,7 +99,7 @@ public class SecurityConfiguration {
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-        return jwtAuthenticationConverter;
+        return jwtAuthenticationConverter;   
     }
 
 

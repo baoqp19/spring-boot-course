@@ -65,16 +65,18 @@ public class SecurityUtil {
         listAuthority.add("ROLE_USER_UPDATE");
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuedAt(now)
-                .expiresAt(validity)
-                .subject(email)
-                .claim("user", userToken) // thêm bao nhiêu cái .claim cũng dc
-                .claim("permission", listAuthority)
+                .issuedAt(now)  // thời gian bắt  đầu token
+                .expiresAt(validity) // thời gian hết hạn token
+                .subject(email)  // người đại diện cái token khi đăng nhập là email 
+                .claim("user", userToken) // lưu thông tin phần payload
+                .claim("permission", listAuthority)  // lưu thông tin quyền hạn
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JW_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
+
+    // đăng nhập thì thông tin user lưu trong token nên 2 static để giải mã token lấy ra email
 
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -113,7 +115,7 @@ public class SecurityUtil {
         }
     }
 
-
+// lấy token của người dùng hiện tại 
     public static Optional<String> getCurrentUserJWT() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication())
@@ -138,10 +140,11 @@ public class SecurityUtil {
             .subject(email)
             .claim("user", userToken)
             .build();
-
+        
+            // tạo header cho thuật toán and trả về giá trị của token  
         JwsHeader jwsHeader = JwsHeader.with(JW_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
-
+      
     }
 
 

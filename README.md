@@ -64,4 +64,10 @@ Không lưu trữ thông tin trong ứng dụng (nothing at all)
  nếu thằng nào gọi API fb getNumberPhone thì sẽ lộ thông tin cá nhân
 
 
+# befere save entity
 
+prePertits: trước khi lưu
+preRemove: trước khi xoá
+
+
+subject: trong jwt là đối tượng token (đảm bảo tính duy nhất) email là hợp lý

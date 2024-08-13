@@ -52,7 +52,7 @@ public class FormatResResponse implements ResponseBodyAdvice<Object> {
         if (status >= 400) {
            return body;        
         } else {
-            // case success
+            // get message in ApiMessage trong từng api
             ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
             res.setMessage(message != null ? message.value() : "CALL API SUCCESS");
             res.setData(body);

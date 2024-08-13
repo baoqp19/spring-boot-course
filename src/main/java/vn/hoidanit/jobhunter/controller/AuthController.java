@@ -65,7 +65,7 @@ public class AuthController {
 
                 // create a token
 
-                // set thông tin người dùng đăng nhập vào context (có thể sử dụng sau này)
+                // cái này để lưu thông tin người đăng nhập và quyền hạn 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 ResLoginDTO res = new ResLoginDTO();
@@ -161,7 +161,7 @@ public class AuthController {
                 // create refresh token
                 String new_refresh_token = this.securityUtil.createRefreshToken(email, res);
 
-                // update user
+                // update user là khi login thì tạo ra token mới và lưu token mới thay token cũ
                 this.userService.updateUserToken(new_refresh_token, email);
 
                 // set cookies
