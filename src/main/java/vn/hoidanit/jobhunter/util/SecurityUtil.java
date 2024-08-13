@@ -77,7 +77,6 @@ public class SecurityUtil {
     }
 
     // đăng nhập thì thông tin user lưu trong token nên 2 static để giải mã token lấy ra email
-
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
@@ -104,6 +103,7 @@ public class SecurityUtil {
                 JW_ALGORITHM.getName());
     }
 
+    // giải mã token trả về subject, claim, thời gian hết hạn 
     public Jwt checkValidRefreshToken(String token) {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(
                 getSecretKey()).macAlgorithm(SecurityUtil.JW_ALGORITHM).build();
@@ -115,7 +115,7 @@ public class SecurityUtil {
         }
     }
 
-// lấy token của người dùng hiện tại 
+   // lấy token của người dùng hiện tại 
     public static Optional<String> getCurrentUserJWT() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication())

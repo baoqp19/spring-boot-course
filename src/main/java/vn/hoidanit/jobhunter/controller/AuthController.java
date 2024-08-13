@@ -78,7 +78,9 @@ public class AuthController {
                                         currentUserDB.getRole());
                         res.setUser(userLogin);
                 }
+                
 
+                // getName() là email 
                 String access_token = this.securityUtil.createAccessToken(authentication.getName(), res);
                 res.setAccessToken(access_token);
 
@@ -129,12 +131,13 @@ public class AuthController {
         @ApiMessage("Get User by refresh token")
         public ResponseEntity<ResLoginDTO> getRefreshToken(
                         // nếu không truyền lên refresh_token thì mặc định là abc
+                        // cookieValue là lấy cookie lên 
                         @CookieValue(name = "refresh_token", defaultValue = "abc") String refresh_token)
                         throws IdInvalidException {
                 if (refresh_token.equals("abc")) {
                         throw new IdInvalidException("Bạn không có refresh token ở cookie");
                 }
-                // check valid
+               // check valid lấy ra email 
                 Jwt decodedToken = this.securityUtil.checkValidRefreshToken(refresh_token);
                 String email = decodedToken.getSubject();
 
@@ -166,7 +169,7 @@ public class AuthController {
 
                 // set cookies
                 ResponseCookie resCookies = ResponseCookie
-                                .from("refresh_token", new_refresh_token)
+                                .from("refresh_token", new_refresh_token)  // value trong cookie trong postman 
                                 .httpOnly(true) // chỉ cho server của to sử dụng
                                 .secure(true) // có nghĩa là cookies chỉ được sử dụng với https (http kh)
                                 .path("/") // tất cả các api đều trả về cookie
@@ -194,13 +197,14 @@ public class AuthController {
                 // remove refresh token cookie
                 ResponseCookie deleteSpringCookie = ResponseCookie
                                 .from("refresh_token", null)
-                                .httpOnly(true)
+                                .httpOnly(true) // đảm bảo cookie không bị truy cập thông qua javascript chỉ truyền qua kết nối https
                                 .secure(true)
-                                .path("/")
+                                .path("/") 
                                 .maxAge(0)
                                 .build();
 
                 return ResponseEntity.ok()
+                //  để cookie có hiệu lực thì xét phần header 
                                 .header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString())
                                 .body(null);
         }

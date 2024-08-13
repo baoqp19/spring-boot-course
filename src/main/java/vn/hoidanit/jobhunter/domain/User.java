@@ -56,6 +56,8 @@ public class User {
     private Instant  createdAt;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     private Instant updatedAt;
+
+    
     private String createdBy;
     private String updatedBy;
 
@@ -63,6 +65,7 @@ public class User {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    // lazy những dữ liệu liên quan đến truy vấn thì lấy còn eager thì không
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnore
     List<Resume> resumes;

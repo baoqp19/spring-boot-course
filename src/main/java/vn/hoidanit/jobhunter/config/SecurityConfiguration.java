@@ -117,6 +117,7 @@ public class SecurityConfiguration {
                 SecurityUtil.JW_ALGORITHM.getName());
     }
 
+    // dùng để giải mã token 
     @Bean
     public JwtDecoder jwtDecoder() {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(

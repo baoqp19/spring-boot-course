@@ -24,8 +24,8 @@ public class PermissionInterceptor implements HandlerInterceptor {
     UserService userService;
 
     @Override
-    @Transactional
-    public boolean preHandle(
+    @Transactional    // có cái này 
+    public boolean preHandle(    // logic trước khi controller xử lý yêu cầu 
             HttpServletRequest request,
             HttpServletResponse response, Object handler)
             throws Exception {
@@ -39,10 +39,11 @@ public class PermissionInterceptor implements HandlerInterceptor {
         System.out.println(">>> requestURI= " + requestURI);
 
         // check permission
-
+        // lấy ra email đã login và mỗi lần gửi token lên đã có hàm decode luuư vào SecurityContex dùng hàm getCurrentUserLogin()         
         String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
+
         if (email != null && !email.isEmpty()) {
             User user = this.userService.handleGetUserByUsername(email);
             if (user != null) {
@@ -61,6 +62,8 @@ public class PermissionInterceptor implements HandlerInterceptor {
             }
           }
         }
+
+        // false thì nó sẽ không trả ra gì vì chưa đên controller thì đã dừng rồi nó xẩy ra trước controller mà
         return true;
     }
 }

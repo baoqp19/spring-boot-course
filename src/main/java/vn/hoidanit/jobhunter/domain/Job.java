@@ -72,8 +72,9 @@ public class Job {
 
     // 1 job có nhiều skill và 1 Skill có nhiều job quan ManyToMany bỏ bên skill or
     // job gi cũng dcdc
+    // JsonIgnore là tránh vòng lặp vô hạn, back truyền cho font và font nó cũng truyền cho back   
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "jobs" })
+    @JsonIgnoreProperties(value = { "jobs" })  // bỏ thuộc tính jobs trong thuộc tính skill là khi gọi skills thì không có jobs
     @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private List<Skill> skills; // lấy mappby ở skills
 

@@ -12,7 +12,7 @@ import vn.hoidanit.jobhunter.domain.Role;
 @Setter
 public class ResLoginDTO {
 
-    @JsonProperty("access_token")          // get API get new token access_token nằm phía dưới, không có thì nằm phía trên user
+    @JsonProperty("access_token")        // ánh xạ muốn tên hiển trị API trả ra là access_token thì dùng 
     private String accessToken;
 
     private UserLogin user;

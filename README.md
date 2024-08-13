@@ -71,3 +71,5 @@ preRemove: trước khi xoá
 
 
 subject: trong jwt là đối tượng token (đảm bảo tính duy nhất) email là hợp lý
+
+interceptor: can thiệt vào quá trình request và response của ứng dụng 
