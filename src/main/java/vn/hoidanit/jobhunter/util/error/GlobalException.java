@@ -107,9 +107,4 @@ public class GlobalException {
 
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
     }
-
-
-
-
-
 }

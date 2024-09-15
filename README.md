@@ -6,7 +6,7 @@
 di chuyển class ctrl + nhân các file để copy rồi di chuyển vào thư mục cần đưa vào 
 
 // Skill endpoint khong co delete skill vi bi loi, thì ta xóa job thì xóa cả skill những xóa skill thì job nó lỗi 
-build.gradle.kts
+build.gradle.kts             
 
 
 -- 1. khi tạo mới user thì khi truyền id = 0 or null thì nó biêt là tạo mới user
@@ -54,7 +54,7 @@ trữ data giữa các lợi gọi request
 Không lưu trữ thông tin trong ứng dụng (nothing at all) 
  ==>> đang dùng stateLess  vì nó làm phe hơn
 
- # OUTH 2 THÌ CẦN CÀI ĐẶT THƯ VIỆN 
+ # OUTH2 THÌ CẦN CÀI ĐẶT THƯ VIỆN 
 -- thêm phần LoginDTO có userName, password
 -- Mã hoá mật khẩu bài cơ chế security
 -- Nhập username vs password để hiện thị thông tin trong bài loadUserByUsernaem

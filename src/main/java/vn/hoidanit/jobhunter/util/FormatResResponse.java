@@ -14,12 +14,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import vn.hoidanit.jobhunter.domain.respone.RestResponse;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 
-@ControllerAdvice 
+// khi controller nào được gọi thì phải đi qua cái này trước 
+@ControllerAdvice
 public class FormatResResponse implements ResponseBodyAdvice<Object> {
 
+    // nó hỗ trợ tất cả các kiểu giá trị trả về,
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
-        return true;   
+        return true;
     }
 
     @Override
@@ -37,20 +39,21 @@ public class FormatResResponse implements ResponseBodyAdvice<Object> {
         res.setStatusCode(status);
 
         // nếu body là string hoặc đối tượng Resource thì in ra body
-        if (body instanceof String || body instanceof Resource) {
+        if (body instanceof Resource || body instanceof String) {
             return body;
         }
 
-        // case error https://localhost8080/v3/api-docs chạy sẽ không bị lỗi và hiển thị đầy đủ thông tin backend
+        // case error https://localhost8080/v3/api-docs chạy sẽ không bị lỗi và hiển thị
+        // đầy đủ thông tin backend
         String path = request.getURI().getPath();
         if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui")) {
             return body;
         }
-        
+
         // body là dữ liệu trả về từ controller API
 
         if (status >= 400) {
-           return body;        
+            return body;
         } else {
             // get message in ApiMessage trong từng api
             ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
@@ -59,6 +62,5 @@ public class FormatResResponse implements ResponseBodyAdvice<Object> {
         }
         return res;
     }
-
 
 }
