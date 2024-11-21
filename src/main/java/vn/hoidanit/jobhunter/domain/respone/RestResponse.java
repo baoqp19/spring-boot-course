@@ -6,6 +6,8 @@ public class RestResponse<T> {
     private Object message;
     private T data;
 
+    
+
     public int getStatusCode(){
         return statusCode;
     }

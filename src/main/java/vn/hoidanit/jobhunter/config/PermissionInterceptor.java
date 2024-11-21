@@ -17,15 +17,13 @@ import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 import vn.hoidanit.jobhunter.util.error.PermissionException;
 
-
-@Component
 public class PermissionInterceptor implements HandlerInterceptor {
     @Autowired
     UserService userService;
 
     @Override
-    @Transactional    // có cái này 
-    public boolean preHandle(    // logic trước khi controller xử lý yêu cầu 
+    @Transactional
+    public boolean preHandle(
             HttpServletRequest request,
             HttpServletResponse response, Object handler)
             throws Exception {
@@ -39,11 +37,9 @@ public class PermissionInterceptor implements HandlerInterceptor {
         System.out.println(">>> requestURI= " + requestURI);
 
         // check permission
-        // lấy ra email đã login và mỗi lần gửi token lên đã có hàm decode luuư vào SecurityContex dùng hàm getCurrentUserLogin()         
         String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-
         if (email != null && !email.isEmpty()) {
             User user = this.userService.handleGetUserByUsername(email);
             if (user != null) {
@@ -53,19 +49,15 @@ public class PermissionInterceptor implements HandlerInterceptor {
                     boolean isAllow = permissions.stream().anyMatch(item -> item.getApiPath().equals(path)
                             && item.getMethod().equals(httpMethod));
 
-
-                   if (!isAllow) {
-                       throw new PermissionException("Bạn không có quyền truy cập endpoint này.");
-               }
-            } else {
-                throw new PermissionException("Bạn không có quyền truy cập endpoint này.");
+                    if (isAllow == false) {
+                        throw new PermissionException("Bạn không có quyền truy cập endpoint này.");
+                    }
+                } else {
+                    throw new PermissionException("Bạn không có quyền truy cập endpoint này.");
+                }
             }
-          }
         }
 
-        // false thì nó sẽ không trả ra gì vì chưa đên controller thì đã dừng rồi nó xẩy ra trước controller mà
         return true;
     }
 }
-
-

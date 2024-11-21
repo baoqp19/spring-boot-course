@@ -125,7 +125,9 @@ public class AuthController {
                 }
 
                 return ResponseEntity.ok().body(userGetAccount);
-        }
+        }       
+
+        
 
         @GetMapping("/auth/refresh")
         @ApiMessage("Get User by refresh token")

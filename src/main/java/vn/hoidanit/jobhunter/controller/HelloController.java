@@ -12,6 +12,6 @@ public class HelloController {
     @GetMapping("/")
     // @CrossOrigin
     public String getHelloWorld() throws IdInvalidException {
-        return "Hello World (Hỏi Dân IT & Eric)";
+        return "Hé lô mọi người";
     }
 }

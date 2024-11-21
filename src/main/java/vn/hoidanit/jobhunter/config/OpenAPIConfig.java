@@ -31,7 +31,7 @@ public class OpenAPIConfig {
 
     private Contact createContact() {
         return new Contact()
-                .email("minhducdtr70@gmail.com")
+                .email("quocbaodtr70@gmail.com")
                 .name("Pham Quoc Bao")
                 .url("https://hoidanit.vn");
     }

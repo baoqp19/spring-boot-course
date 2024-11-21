@@ -49,6 +49,7 @@ public class UserController {
             throw new IdInvalidException(
                     "Email " + postManUser.getEmail() + " đã tồn tại, vui lòng sử dụng email khác.");
         }
+        
         String hasdPassword = this.passwordEncoder.encode(postManUser.getPassword()); // thuật toán để chuyển password
                                                                                       // sang mã hoá
         postManUser.setPassword(hasdPassword); // ghi để mật khẩu để lưu vào database
@@ -56,7 +57,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(abcUser));
     }
 
-     @DeleteMapping("/users/{id}")
+    @DeleteMapping("/users/{id}")
     @ApiMessage("Delete a user")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
         User currentUser = this.userService.fetchUserById(id);
@@ -85,6 +86,7 @@ public class UserController {
             @Filter Specification<User> spec, Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(this.userService.fetchAllUser(spec, pageable));
     }
+    
 
     @PutMapping("/users")
     @ApiMessage("Update a user")

@@ -55,6 +55,7 @@ Không lưu trữ thông tin trong ứng dụng (nothing at all)
  ==>> đang dùng stateLess  vì nó làm phe hơn
 
  # OUTH2 THÌ CẦN CÀI ĐẶT THƯ VIỆN 
+
 -- thêm phần LoginDTO có userName, password
 -- Mã hoá mật khẩu bài cơ chế security
 -- Nhập username vs password để hiện thị thông tin trong bài loadUserByUsernaem
@@ -73,3 +74,7 @@ preRemove: trước khi xoá
 subject: trong jwt là đối tượng token (đảm bảo tính duy nhất) email là hợp lý
 
 interceptor: can thiệt vào quá trình request và response của ứng dụng 
+
+
+# cơ chế mặc định của SecuritySpring
+

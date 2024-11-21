@@ -77,7 +77,7 @@ public class Job {
     @JsonIgnoreProperties(value = { "jobs" })  // bỏ thuộc tính jobs trong thuộc tính skill là khi gọi skills thì không có jobs
     @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private List<Skill> skills; // lấy mappby ở skills
-
+   
     @PrePersist
     public void handleBeforeCreate() {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
